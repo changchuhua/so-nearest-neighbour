@@ -1,0 +1,39 @@
+title: Stealthy Scheduled Task Creation via SYSTEM and World-Writable Paths
+id: b2d8f1e5-7c2a-4a9f-9e1c-7f55e0932d4b
+status: experimental
+description: |
+    Detects the creation of a scheduled task running as the SYSTEM account, 
+    using a task name that mimics legitimate Windows paths, and executing a 
+    payload from commonly world-writable or suspicious directories.
+author: Gemini
+date: 2026/02/09
+tags:
+    - attack.persistence
+    - attack.t1053.005
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith: '\schtasks.exe'
+    selection_ru:
+        CommandLine|contains: 
+            - '/RU SYSTEM'
+            - '/RU ""SYSTEM""'
+    selection_tn:
+        # Looking for attempts to hide in the Microsoft/Windows hierarchy
+        CommandLine|contains: 
+            - '/TN \Microsoft\Windows\'
+            - '/TN ""\Microsoft\Windows\'
+    selection_tr:
+        # Focus on world-writable/non-standard execution paths
+        CommandLine|contains:
+            - 'C:\ProgramData\'
+            - 'C:\Users\Public\'
+            - 'C:\Windows\Temp\'
+            - '\AppData\Local\Temp\'
+    condition: selection_img and selection_ru and selection_tn and selection_tr
+falsepositives:
+    - Highly unusual legacy system management scripts (extremely rare to combine all three indicators).
+    - Certain EDR/AV agent self-updates (though they usually use unique folders, not \Microsoft\Windows\).
+level: critical
