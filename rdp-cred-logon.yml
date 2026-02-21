@@ -1,0 +1,18 @@
+title: RDP Logon with Explicit Credentials - Custom Mapping
+id: b62d4648-1234-4a5b-bcde-9f8e7d6c5b4a
+status: experimental
+description: Detects RDP connection attempts using explicit credentials.
+logsource:
+  product: windows
+  service: security
+detection:
+  selection:
+    EventID: 4648
+    ProcessName|endswith: '\mstsc.exe'
+  condition: selection
+falsepositives:
+  - Administrators using secondary accounts for management tasks.
+level: medium
+tags:
+  - attack.lateral_movement
+  - attack.t1021.001
