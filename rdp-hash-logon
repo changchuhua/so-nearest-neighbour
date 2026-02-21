@@ -1,0 +1,21 @@
+title: RDP Pass-the-Hash via Restricted Admin Mode
+id: f3a14624-9988-7766-5544-33221100aabb
+status: experimental
+description: Detects RDP connections using Restricted Admin Mode, which is indicative of Pass-the-Hash lateral movement.
+logsource:
+  product: windows
+  service: security
+detection:
+  selection:
+    EventID: 4624
+    LogonType: 3
+  filter_rdp:
+    ProcessName|endswith: '\svchost.exe'
+    ServiceName: 'TermService'
+  condition: selection and filter_rdp
+falsepositives:
+  - Legitimate use of Restricted Admin mode by high-privileged administrators.
+level: high
+tags:
+  - attack.lateral_movement
+  - attack.t1550.002
