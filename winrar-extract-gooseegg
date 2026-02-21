@@ -1,4 +1,4 @@
-"title: WinRAR Extraction of Suspicious Files
+title: WinRAR Extraction of Suspicious Files
 id: 7d1d8da0-f5a6-4c1b-9a2c-1234567890ab
 status: experimental
 description: Detects the creation of specific suspicious files (DefragmentSrv, justice.exe, wayzgoose.dll) by the WinRAR process.
@@ -21,4 +21,4 @@ detection:
     condition: selection_process and selection_files
 falsepositives:
     - Manual administrative recovery of specifically named backup files.
-level: critical"
+level: critical
