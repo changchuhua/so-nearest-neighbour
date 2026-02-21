@@ -1,0 +1,43 @@
+name: Wireless Network Enumeration via Netsh
+id: 1500001
+description: |
+    Detects enumeration of wireless networks for nearest neighbour movement.
+type: detection
+detection_id: '54b23456-e89b-4c1b-9a2c-1234567890ab'
+detection_category: ''
+detection_type: 'sigma'
+contributors:
+  - 'Chang'
+created: 2026-02-21
+modified: 2026-02-21
+questions:
+  - question: 'Was anyone checking out available wireless networks through the command line?'
+    context: 'We assume that normal users would perform wlan activities through the GUI and using netsh indicates admin or attacker activity.'
+    answer_sources:
+        - process_creation
+    query: |
+        aggregation: false
+        logsource:
+          category: process_creation
+          product: windows
+        detection:
+	  selection_proc:
+            process.name: 'netsh.exe'
+   	  selection_args:
+            process.args|contains|all:
+              - 'wlan'
+              - 'show'
+	  selection_cmd:
+	    process.args|contains:
+	      - 'all'
+              - 'networks'
+    	  condition: selection_proc and selection_args and selection_cmd
+	fields:
+          - user.name
+          - process.executable
+          - process.command_line
+          - process.working_directory
+	tags:
+	  - attack.reconnaissance
+	  - attack.discovery
+	  - attack.t1016  
