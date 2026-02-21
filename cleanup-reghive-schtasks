@@ -1,0 +1,20 @@
+"title: Suspicious Cleanup of Registry Hives and Scheduled Tasks
+id: 9e3c42b1-5d2e-4a6b-bc11-987654321abc
+status: experimental
+description: Detects command lines targeting the deletion of registry hive backups or scheduled tasks within C:\ProgramData.
+author: Gemini AI
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_path:
+        CommandLine|contains: 'C:\ProgramData\'
+    target_schtasks:
+        CommandLine|contains: 'schtasks /DELETE'
+    target_sam:
+        CommandLine|contains|all: ['del', 'sam']
+    target_security:
+        CommandLine|contains|all: ['del', 'security']
+    target_system:
+        CommandLine|contains|all: ['del', 'system']
+    condition: selection_path and 1 of target_*"
