@@ -1,0 +1,24 @@
+"title: WinRAR Extraction of Suspicious Files
+id: 7d1d8da0-f5a6-4c1b-9a2c-1234567890ab
+status: experimental
+description: Detects the creation of specific suspicious files (DefragmentSrv, justice.exe, wayzgoose.dll) by the WinRAR process.
+references:
+    - Internal Lab Observation
+author: Gemini
+date: 2026/02/09
+logsource:
+    category: file_event
+    product: windows
+detection:
+    selection_process:
+        Image|endswith: '\WinRAR.exe'
+    selection_files:
+        TargetFilename|endswith: 
+            - '\DefragmentSrv.exe'
+            - '\DefragmentSrv.bat'
+            - '\justice.exe'
+            - '\wayzgoose.dll'
+    condition: selection_process and selection_files
+falsepositives:
+    - Manual administrative recovery of specifically named backup files.
+level: critical"
