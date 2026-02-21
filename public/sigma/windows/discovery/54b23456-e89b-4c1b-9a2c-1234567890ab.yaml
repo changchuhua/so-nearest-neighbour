@@ -21,22 +21,22 @@ questions:
           category: process_creation
           product: windows
         detection:
-	  selection_proc:
+	      selection_proc:
             process.name: 'netsh.exe'
-   	  selection_args:
+   	      selection_args:
             process.args|contains|all:
               - 'wlan'
               - 'show'
-	  selection_cmd:
-	    process.args|contains:
-	      - 'all'
+	      selection_cmd:
+	        process.args|contains:
+	          - 'all'
               - 'networks'
     	  condition: selection_proc and selection_args and selection_cmd
 	fields:
-          - user.name
-          - process.executable
-          - process.command_line
-          - process.working_directory
+      - user.name
+      - process.executable
+      - process.command_line
+      - process.working_directory
 	tags:
 	  - attack.reconnaissance
 	  - attack.discovery
