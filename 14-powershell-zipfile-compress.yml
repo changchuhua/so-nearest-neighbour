@@ -1,0 +1,35 @@
+title: PowerShell Data Compression via ZipFile Class
+id: a8d12345-5678-4321-bcde-f1e2d3c4b5a6
+status: experimental
+description: |
+  Detects the use of the .NET ZipFile class to compress directories. 
+  This logic looks for either the specific method call or the loading of the compression assembly 
+  combined with suspicious output redirection.
+date: 2026/02/09
+tags:
+  - attack.collection
+  - attack.t1560.001
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_img:
+    - Image|endswith: '\powershell.exe'
+    - OriginalFileName: 'PowerShell.EXE'
+    - Image|endswith: '\pwsh.exe'
+  selection_method:
+    CommandLine|contains: 
+      - '[IO.Compression.ZipFile]::CreateFromDirectory'
+      - '[System.IO.Compression.ZipFile]::CreateFromDirectory'
+  selection_assembly:
+    CommandLine|contains:
+      - 'System.IO.Compression.FileSystem'
+  selection_context:
+    CommandLine|contains:
+      - 'C:\Windows\Temp\'
+      - '2>&1'
+      - ' > '
+  condition: selection_img and (selection_method or (selection_assembly and selection_context))
+falsepositives:
+  - Automated deployment scripts (e.g., Octopus Deploy, SCCM) that use .NET classes for performance.
+level: high

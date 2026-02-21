@@ -1,0 +1,21 @@
+title: Securely Wiped Free Space via Cipher.exe
+id: 54a83689-d9d3-4911-872e-07167a5b3a4a
+status: experimental
+description: Detects the use of 'cipher.exe' to overwrite deleted data on a drive, often used as an anti-forensics technique.
+date: 2026/02/09
+tags:
+    - attack.defense_evasion
+    - attack.t1070.004
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        - Image|endswith: '\cipher.exe'
+        - OriginalFileName: 'CIPHER.EXE'
+    selection_cmd:
+        CommandLine|contains: '/w'
+    condition: selection_img and selection_cmd
+falsepositives:
+    - Legitimate administrative maintenance or disk cleaning by a system administrator.
+level: medium

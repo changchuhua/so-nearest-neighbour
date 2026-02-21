@@ -1,0 +1,35 @@
+title: Malicious Credential Staging in ProgramData
+id: 5e6a2b1c-8d3f-4a5e-9b2d-1f0e9d8c7b6a
+status: experimental
+description: Detects the staging of captured credentials in subdirectories of ProgramData using a specific version-style naming convention (vX.XX.XXXXX) often used by infostealers.
+references:
+    - Internal IOC image analysis
+author: Gemini
+date: 2026/02/09
+tags:
+    - attack.credential_access
+    - attack.t1555
+    - attack.exfiltration
+logsource:
+    product: windows
+    category: file_event
+detection:
+    selection_paths:
+        TargetFilename|contains:
+            - 'C:\ProgramData\Microsoft\v'
+            - 'C:\ProgramData\Adobe\v'
+            - 'C:\ProgramData\Comms\v'
+            - 'C:\ProgramData\Intel\v'
+            - 'C:\ProgramData\Kaspersky Lab\v'
+            - 'C:\ProgramData\Bitdefender\v'
+            - 'C:\ProgramData\ESET\v'
+            - 'C:\ProgramData\NVIDIA\v'
+            - 'C:\ProgramData\UbiSoft\v'
+            - 'C:\ProgramData\Steam\v'
+    selection_format:
+        # Matches the v%u.%02u.%04u pattern (e.g., v3.80.15456)
+        TargetFilename|re: '.*\\v\d{1,2}\.\d{2}\.\d{5}$'
+    condition: selection_paths and selection_format
+falsepositives:
+    - Extremely rare. Legitimate software typically uses more descriptive filenames or different sub-path structures in ProgramData.
+level: high

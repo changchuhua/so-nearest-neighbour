@@ -1,0 +1,22 @@
+title: PsExec Service Installation
+id: 34176263-d18c-474d-869d-215886915e6b
+status: experimental
+description: Detects the installation of the PsExec service (PSEXESVC) or similar renamed services used for lateral movement.
+logsource:
+    product: windows
+    service: system
+detection:
+    selection_eid:
+        EventID: 7045
+    selection_service:
+        ServiceName: 'PSEXESVC'
+    selection_image:
+        ImagePath|contains: 'PSEXESVC.exe'
+    condition: selection_eid and (selection_service or selection_image)
+falsepositives:
+    - Administrative maintenance scripts.
+    - Legitimate software deployment tools.
+level: high
+tags:
+    - attack.lateral_movement
+    - attack.t1570

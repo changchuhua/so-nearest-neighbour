@@ -1,0 +1,20 @@
+title: GooseEgg Malware Registry Persistence
+id: 5f9e8d31-22b1-4ca3-b551-ca31eb6ce345
+status: experimental
+description: Detects the creation of a 'rogue' protocol handler registry key or its CLSID subkey as observed in GooseEgg.
+logsource:
+  category: registry_event
+  product: windows
+detection:
+  selection_key_path:
+    TargetObject|contains: '\SOFTWARE\Classes\PROTOCOLS\Handler\rogue'
+  selection_value_content:
+    Details|contains: '{026CC6D7-34B2-33D5-B551-CA31EB6CE345}'
+  condition: selection_key_path or selection_value_content
+falsepositives:
+  - Unknown
+level: critical
+tags:
+  - attack.persistence
+  - attack.privilege_escalation
+  - attack.t1547.001

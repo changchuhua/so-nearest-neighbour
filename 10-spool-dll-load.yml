@@ -1,0 +1,30 @@
+title: Print Spooler Loading DLL from Suspicious User-Writable Directories
+id: 5c2d3e55-66f3-4db7-9215-ca31eb6ce889
+status: experimental
+description: |
+    Detects the Print Spooler service (spoolsv.exe) loading a DLL from ProgramData, 
+    Temp, or Public user folders. This is a common indicator of PrintNightmare 
+    or Waygoose exploitation.
+references:
+    - Internal Code Analysis
+date: 2026/02/09
+logsource:
+    category: image_load
+    product: windows
+detection:
+    selection_process:
+        Image|endswith: '\spoolsv.exe'
+    selection_suspicious_paths:
+        ImageLoaded|startswith:
+            - 'C:\ProgramData\'
+            - 'C:\Users\Public\'
+            - 'C:\Windows\Temp\'
+            - 'C:\Temp\'
+    condition: selection_process and selection_suspicious_paths
+falsepositives:
+    - Poorly developed legacy printer utilities (rare).
+level: critical
+tags:
+    - attack.privilege_escalation
+    - attack.hijack_execution_flow
+    - attack.t1574.001

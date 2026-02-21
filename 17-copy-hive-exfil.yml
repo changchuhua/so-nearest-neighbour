@@ -1,0 +1,29 @@
+title: Refined NTDS.dit and SYSTEM Hive Exfiltration
+id: 9b3d2c1a-5e6f-4a7b-8c9d-0e1f2a3b4c5d
+status: experimental
+description: Detects copying of sensitive AD files while filtering out legitimate access to the live files.
+date: 2026/02/22
+tags:
+  - attack.credential_access
+  - attack.t1003.003
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_verbs:
+    CommandLine|contains:
+      - 'copy '
+      - 'xcopy '
+      - 'robocopy '
+      - 'type '
+  selection_sensitive_files:
+    CommandLine|contains:
+      - '\ntds.dit'
+      - '\Windows\System32\config\SYSTEM'
+      - 'HarddiskVolumeShadowCopy'
+  filter_legitimate_locations:
+    CommandLine|contains:
+      - 'C:\Windows\NTDS\ntds.dit'
+      - 'C:\Windows\System32\config\SYSTEM'
+  condition: selection_verbs and selection_sensitive_files and not filter_legitimate_locations
+level: critical

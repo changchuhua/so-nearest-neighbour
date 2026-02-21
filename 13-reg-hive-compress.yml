@@ -1,0 +1,30 @@
+title: PowerShell Compression of Multiple Registry Hives
+id: 5a4b2c1d-3e4f-4a5b-8c9d-1e2f3a4b5c6d
+status: experimental
+description: Detects the execution of PowerShell's Compress-Archive cmdlet targeting multiple registry hives (SAM, Security, System) simultaneously, regardless of file extension.
+date: 2026/02/09
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_img:
+    - Image|endswith: '\powershell.exe'
+    - OriginalFileName: 'PowerShell.EXE'
+    - Image|endswith: '\pwsh.exe'
+  selection_cmd_compress:
+    CommandLine|contains: 'Compress-Archive'
+  selection_hive_sam:
+    CommandLine|contains: 'sam'
+  selection_hive_sec:
+    CommandLine|contains: 'security'
+  selection_hive_sys:
+    CommandLine|contains: 'system'
+  condition: selection_img and selection_cmd_compress and 2 of selection_hive_*
+falsepositives:
+  - Backup scripts that compress legitimate system state files (though rarely via ad-hoc PowerShell commands).
+level: high
+tags:
+  - attack.credential_access
+  - attack.t1003.002
+  - attack.collection
+  - attack.t1560.001

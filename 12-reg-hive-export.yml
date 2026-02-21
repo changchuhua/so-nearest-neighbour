@@ -1,0 +1,27 @@
+title: Registry Hive Export via Reg.exe
+id: 48e833a4-84d5-4127-a06d-a16f29ef199e
+status: experimental
+description: Detects the export of sensitive registry hives (SAM, SECURITY, SYSTEM) using reg.exe, often used for credential dumping.
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_img:
+    Image|endswith: '\reg.exe'
+    CommandLine|contains:
+      - ' save '
+  selection_hives:
+    CommandLine|contains:
+      - 'hklm\sam'
+      - 'hkey_local_machine\sam'
+      - 'hklm\security'
+      - 'hkey_local_machine\security'
+      - 'hklm\system'
+      - 'hkey_local_machine\system'
+  condition: selection_img and selection_hives
+falsepositives:
+  - Backup scripts (though these usually target higher-level keys or use specialized backup software).
+level: high
+tags:
+  - attack.credential_access
+  - attack.t1003.002

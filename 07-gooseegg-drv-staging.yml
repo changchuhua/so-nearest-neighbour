@@ -1,0 +1,26 @@
+title: GooseEgg Driver Staging in ProgramData
+id: f42d81c7-7e2b-4a5c-8d1e-9e8a7f6c5b4a
+status: experimental
+description: |
+  Detects GooseEgg (APT28) staging activities by identifying the creation of specific
+  print driver paths (pnms003/pnms009) within C:\ProgramData.
+references:
+  - https://www.microsoft.com/en-us/security/blog/2024/04/22/analyzing-forest-blizzard-custom-exploitation-tool-gooseegg/
+date: 2026/02/09
+tags:
+  - attack.privilege_escalation
+  - attack.t1068
+logsource:
+  category: file_event
+  product: windows
+detection:
+  selection_destination:
+    TargetFilename|startswith: 'C:\ProgramData\'
+  selection_driver_names:
+    TargetFilename|contains:
+      - '\prnms003.inf_'
+      - '\prnms009.inf_'
+  condition: selection_destination and selection_driver_names
+falsepositives:
+  - Legitimate driver installation or updates
+level: high

@@ -1,0 +1,28 @@
+title: Suspicious Child Process of Print Spooler
+id: 1f23a456-7890-4cde-b123-ca31eb6ce001
+status: experimental
+description: Detects the Windows Print Spooler service (spoolsv.exe) spawning a shell or reconnaissance tool.
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_parent:
+    ParentImage|endswith: '\spoolsv.exe'
+  selection_child:
+    Image|endswith:
+      - '\cmd.exe'
+      - '\powershell.exe'
+      - '\pwsh.exe'
+      - '\net.exe'
+      - '\net1.exe'
+      - '\whoami.exe'
+      - '\ipconfig.exe'
+      - '\rundll32.exe'
+  condition: selection_parent and selection_child
+falsepositives:
+  - Extremely rare. Some legacy printer drivers might spawn rundll32, but never cmd/powershell.
+level: critical
+tags:
+  - attack.privilege_escalation
+  - attack.t1068
+  - attack.execution

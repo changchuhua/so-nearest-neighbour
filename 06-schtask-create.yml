@@ -5,7 +5,6 @@ description: |
     Detects the creation of a scheduled task running as the SYSTEM account, 
     using a task name that mimics legitimate Windows paths, and executing a 
     payload from commonly world-writable or suspicious directories.
-author: Gemini
 date: 2026/02/09
 tags:
     - attack.persistence
