@@ -21,7 +21,7 @@ detection:
     CommandLine|contains: 'system'
   condition: selection_img and selection_cmd_compress and 2 of selection_hive_*
 falsepositives:
-  - Backup scripts that compress legitimate system state files (though rarely via ad-hoc PowerShell commands).
+  - Backup scripts that compress legitimate system state files (though rarely via ad-hoc PowerShell commands)
 level: high
 tags:
   - attack.credential_access
