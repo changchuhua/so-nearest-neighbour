@@ -19,7 +19,7 @@ detection:
     CommandLine|contains: 'security'
   selection_hive_sys:
     CommandLine|contains: 'system'
-  condition: selection_img and selection_cmd_compress and 2 of selection_hive_*
+  condition: selection_img and selection_cmd_compress and ((selection_hive_sam and selection_hive_sec) or (selection_hive_sam and selection_hive_sys) or (selection_hive_sec and selection_hive_sys))
 falsepositives:
   - Backup scripts that compress legitimate system state files (though rarely via ad-hoc PowerShell commands).
 level: high
