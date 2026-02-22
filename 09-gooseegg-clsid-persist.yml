@@ -12,7 +12,7 @@ detection:
     Details|contains: '{026CC6D7-34B2-33D5-B551-CA31EB6CE345}'
   condition: selection_key_path or selection_value_content
 falsepositives:
-  - Unknown
+  - Very unlikely
 level: critical
 tags:
   - attack.persistence

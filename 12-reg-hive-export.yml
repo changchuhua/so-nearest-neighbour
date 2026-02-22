@@ -8,20 +8,22 @@ logsource:
 detection:
   selection_img:
     Image|endswith: '\reg.exe'
-    CommandLine|contains:
-      - ' save '
+    OriginalFileName: 'reg.exe'
+  selection_cmd:
+    CommandLine|contains: 'save'
   selection_hives:
     CommandLine|contains:
-      - 'hklm\sam'
-      - 'hkey_local_machine\sam'
-      - 'hklm\security'
-      - 'hkey_local_machine\security'
-      - 'hklm\system'
-      - 'hkey_local_machine\system'
-  condition: selection_img and selection_hives
+      - '\sam'
+      - '\security'
+      - '\system'
+  selection_path:
+    CommandLine|contains:
+      - 'C:\ProgramData\'
+      - '%ProgramData%'
+  condition: selection_img and selection_cmd and selection_hives and selection_path
 falsepositives:
-  - Backup scripts (though these usually target higher-level keys or use specialized backup software).
-level: high
+  - Extremely unlikely for reg backups to be staged in C:\ProgramData.
+level: critical
 tags:
   - attack.credential_access
   - attack.t1003.002

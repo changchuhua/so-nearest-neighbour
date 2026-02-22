@@ -2,13 +2,15 @@ title: PowerShell Data Compression via ZipFile Class
 id: a8d12345-5678-4321-bcde-f1e2d3c4b5a6
 status: experimental
 description: |
-  Detects the use of the .NET ZipFile class to compress directories. 
-  This logic looks for either the specific method call or the loading of the compression assembly 
-  combined with suspicious output redirection.
-date: 2026/02/09
+  Detects the use of the .NET ZipFile class or the loading of the System.IO.Compression.FileSystem 
+  assembly via PowerShell to compress directories, combined with ordered output redirection 
+  to a .tmp file and the 2>&1 error stream redirect. This specific syntax strongly indicates 
+  a C2 framework silently staging data and capturing console output.
+date: 2026/02/22
 tags:
   - attack.collection
   - attack.t1560.001
+  - attack.command_and_control
 logsource:
   category: process_creation
   product: windows
@@ -17,19 +19,19 @@ detection:
     - Image|endswith: '\powershell.exe'
     - OriginalFileName: 'PowerShell.EXE'
     - Image|endswith: '\pwsh.exe'
-  selection_method:
-    CommandLine|contains: 
-      - '[IO.Compression.ZipFile]::CreateFromDirectory'
-      - '[System.IO.Compression.ZipFile]::CreateFromDirectory'
-  selection_assembly:
+  selection_assembly_class:
     CommandLine|contains:
       - 'System.IO.Compression.FileSystem'
-  selection_context:
+      - '[IO.Compression.ZipFile]'
+      - '[System.IO.Compression.ZipFile]'
+  selection_pattern:
+    CommandLine: 
+      - '*::CreateFromDirectory*>*\.tmp*'
+      - '*::CreateFromDirectory*>*Windows\Temp\*.tmp*'
+  selection_redirect:
     CommandLine|contains:
-      - 'C:\Windows\Temp\'
       - '2>&1'
-      - ' > '
-  condition: selection_img and (selection_method or (selection_assembly and selection_context))
+  condition: selection_img and selection_assembly_class and selection_pattern and selection_redirect
 falsepositives:
-  - Automated deployment scripts (e.g., Octopus Deploy, SCCM) that use .NET classes for performance.
-level: high
+  - Unlikely. Legitimate admin scripts rarely combine this specific .NET compression method with randomized .tmp output and 2>&1 stream redirection.
+level: critical

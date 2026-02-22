@@ -27,9 +27,8 @@ detection:
             - 'C:\ProgramData\UbiSoft\v'
             - 'C:\ProgramData\Steam\v'
     selection_format:
-        # Matches the v%u.%02u.%04u pattern (e.g., v3.80.15456)
         TargetFilename|re: '.*\\v\d{1,2}\.\d{2}\.\d{5}$'
     condition: selection_paths and selection_format
 falsepositives:
     - Extremely rare. Legitimate software typically uses more descriptive filenames or different sub-path structures in ProgramData.
-level: high
+level: critical

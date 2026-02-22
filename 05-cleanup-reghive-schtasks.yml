@@ -17,3 +17,7 @@ detection:
     target_system:
         CommandLine|contains|all: ['del', 'system']
     condition: selection_path and 1 of target_*
+falsepositives:
+    - Legitimate cleanup activities by system administrators
+    - Automated maintenance scripts
+level: high

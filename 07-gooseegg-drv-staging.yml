@@ -22,5 +22,5 @@ detection:
       - '\prnms009.inf_'
   condition: selection_destination and selection_driver_names
 falsepositives:
-  - Legitimate driver installation or updates
-level: high
+  - Extremely unlikely, as these specific driver paths are not commonly used by legitimate software.
+level: critical
