@@ -1,20 +1,26 @@
-title: GooseEgg Malware Registry Persistence
-id: 5f9e8d31-22b1-4ca3-b551-ca31eb6ce345
+title: GooseEgg COM Hijack Path Traversal
+id: c9281a4b-7e6d-4f3c-8a1b-9d0e1f2a3b4c
 status: experimental
-description: Detects the creation of a 'rogue' protocol handler registry key or its CLSID subkey as observed in GooseEgg.
+description: |
+  Detects a registry value modification targeting a specific CLSID ({026CC6D7-34B2-33D5-B551-CA31EB6CE345}) 
+  InProcServer32 key where the value contains a path traversal string ('..\..\..\..'). This pattern 
+  is highly indicative of COM hijacking for persistence and privilege escalation, as observed in GooseEgg malware.
+date: 2026/02/23
 logsource:
   category: registry_event
   product: windows
 detection:
   selection_key_path:
-    TargetObject|contains: '\SOFTWARE\Classes\PROTOCOLS\Handler\rogue'
+    # Using contains to handle the \REGISTRY\USER\<SID>\ prefix commonly logged by Sysmon
+    TargetObject|contains: '\Software\Classes\CLSID\{026CC6D7-34B2-33D5-B551-CA31EB6CE345}\InProcServer32'
   selection_value_content:
-    Details|contains: '{026CC6D7-34B2-33D5-B551-CA31EB6CE345}'
-  condition: selection_key_path or selection_value_content
+    Details|contains: '..\..\..\..'
+  condition: selection_key_path and selection_value_content
 falsepositives:
-  - Very unlikely
+  - Extremely unlikely. Legitimate COM objects do not typically rely on extensive path traversal strings.
 level: critical
 tags:
   - attack.persistence
   - attack.privilege_escalation
   - attack.t1547.001
+  - attack.t1574.002
