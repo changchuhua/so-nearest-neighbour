@@ -19,11 +19,11 @@ detection:
             - 'Cmd.Exe'
             - 'PowerShell.EXE'
             - 'pwsh.dll'
-    selection_firewall:
+    selection_netsh:
         CommandLine|contains|all:
             - 'netsh'
             - 'add'
-    either_firewall:
+    selection_firewall:
         CommandLine|contains:
             - 'firewall'
             - 'advfirewall'
@@ -34,7 +34,7 @@ detection:
     selection_temp_path:
         CommandLine|contains:
             - 'C:\Windows\Temp\'
-    condition: all of selection_* and either_firewall
+    condition: all of selection_*
 falsepositives:
     - Legacy custom installers that wrap netsh commands in a shell and log to system temp.
 level: critical
