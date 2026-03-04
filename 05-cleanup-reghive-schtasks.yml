@@ -1,23 +1,21 @@
-title: Suspicious Cleanup of Registry Hives and Scheduled Tasks
+title: Suspicious Scheduled Task Deletion from ProgramData
 id: 9e3c42b1-5d2e-4a6b-bc11-987654321abc
 status: experimental
-description: Detects command lines targeting the deletion of registry hive backups or scheduled tasks within C:\ProgramData.
+description: Detects the deletion of specific scheduled tasks (like WinSrv) executed by a batch script running out of the C:\ProgramData directory.
 logsource:
     category: process_creation
     product: windows
 detection:
-    selection_path:
-        CommandLine|contains: 'C:\ProgramData\'
-    target_schtasks:
-        CommandLine|contains: 'schtasks /DELETE'
-    target_sam:
-        CommandLine|contains|all: ['del', 'sam']
-    target_security:
-        CommandLine|contains|all: ['del', 'security']
-    target_system:
-        CommandLine|contains|all: ['del', 'system']
-    condition: selection_path and 1 of target_*
+    selection_parent:
+        ParentCommandLine|contains: 'C:\ProgramData\'
+    selection_process:
+        - Image|endswith: '\schtasks.exe'
+        - OriginalFileName: 'schtasks.exe'
+    selection_cmd:
+        CommandLine|contains|all: 
+            - '/DELETE'
+            - 'WinSrv'
+    condition: selection_parent and selection_process and selection_cmd
 falsepositives:
-    - Legitimate cleanup activities by system administrators
-    - Automated maintenance scripts
+    - Highly unlikely. The combination of ProgramData script execution and WinSrv deletion is a strong indicator of GooseEgg/APT28 activity.
 level: high
