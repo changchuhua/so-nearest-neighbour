@@ -11,11 +11,13 @@ logsource:
   category: registry_event
   product: windows
 detection:
-  selection_key_path:
-    TargetObject|contains: 'Classes\PROTOCOLS\Handler\rogue'
-  selection_value_content:
-    Details|contains: '{026CC6D7-34B2-33D5-B551-CA31EB6CE345}'
-  condition: selection_key_path and selection_value_content
+    selection:
+        EventID: 13 # RegistryEvent (Value Set)
+        TargetObject|contains|all:
+            - '\_Classes\PROTOCOLS\Handler\rogue123\'
+            - '\CLSID'
+        Details: '{026CC6D7-34B2-33D5-B551-CA31EB6CE345}'
+    condition: selection
 falsepositives:
   - Unknown
 level: critical
