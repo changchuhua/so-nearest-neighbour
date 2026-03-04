@@ -12,9 +12,9 @@ logsource:
   product: windows
 detection:
   selection_key_path:
-    TargetObject|re: '.*Classes\\PROTOCOLS\\Handler\\rogue\d+$'
+    TargetObject|re: '.*Classes\\PROTOCOLS\\Handler\\rogue[0-9]+'
   selection_value_path:
-    TargetObject|re: '.*Classes\\PROTOCOLS\\Handler\\rogue\d+\\CLSID$'
+    TargetObject|re: '.*Classes\\PROTOCOLS\\Handler\\rogue[0-9]+\\CLSID'
   selection_value_content:
     Details|contains: '{026CC6D7-34B2-33D5-B551-CA31EB6CE345}'
   condition: selection_key_path or (selection_value_path and selection_value_content)
