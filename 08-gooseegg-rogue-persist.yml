@@ -8,7 +8,7 @@ references:
   - Internal Code Analysis (Waygoose/GooseEgg)
 date: 2026/02/22
 logsource:
-  category: registry_event
+  category: registry_set
   product: windows
 detection:
     selection:
