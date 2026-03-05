@@ -12,7 +12,7 @@ logsource:
 detection:
   selection_key_path:
     # Using contains to handle the \REGISTRY\USER\<SID>\ prefix commonly logged by Sysmon
-    TargetObject|contains: '\Software\Classes\CLSID\{026CC6D7-34B2-33D5-B551-CA31EB6CE345}\InProcServer32'
+    TargetObject|contains: '\Classes\CLSID\{026CC6D7-34B2-33D5-B551-CA31EB6CE345}\InProcServer32'
   selection_value_content:
     registry.data.strings|contains: '..\..\..\..'
   condition: selection_key_path and selection_value_content
