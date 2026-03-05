@@ -14,7 +14,7 @@ detection:
     selection:
         TargetObject|contains: 'Classes\PROTOCOLS\Handler\rogue'
         TargetObject|endswith: '\CLSID'
-        Details|contains: '026CC6D7-34B2-33D5-B551-CA31EB6CE345'
+        registry.data.strings|contains: '026CC6D7-34B2-33D5-B551-CA31EB6CE345'
     condition: selection
 falsepositives:
   - Unknown
