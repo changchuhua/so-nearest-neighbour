@@ -2,8 +2,7 @@ title: GooseEgg Malware Hardcoded Registry Persistence
 id: 6a1b2c3d-4e5f-6a7b-8c9d-0e1f2a3b4c5d
 status: experimental
 description: |
-  Detects the creation of a 'rogue' protocol handler registry CLSID subkey 
-  using regex paths as observed in GooseEgg exploit components.
+  Detects the creation of a 'rogue' protocol handler registry CLSID subkey as observed in GooseEgg exploit components.
 references:
   - Internal Code Analysis (Waygoose/GooseEgg)
 date: 2026/02/22
