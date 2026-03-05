@@ -12,9 +12,9 @@ logsource:
   product: windows
 detection:
     selection:
-        EventID: 13 # RegistryEvent (Value Set)
-        TargetObject|contains|all:
-            - '\_Classes\PROTOCOLS\Handler\rogue123\'
+        TargetObject|contains:
+            - 'Classes\PROTOCOLS\Handler\rogue'
+        TargetObject|endswith:
             - '\CLSID'
         Details: '{026CC6D7-34B2-33D5-B551-CA31EB6CE345}'
     condition: selection
