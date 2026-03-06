@@ -6,12 +6,12 @@ logsource:
   product: windows
   service: security
 detection:
-  selection:
-    EventID: 4648
-    ProcessName|endswith: '\mstsc.exe'
-  condition: selection
+    selection:
+        EventID: 4624
+        LogonType: 10
+    condition: selection
 falsepositives:
-  - Administrators using secondary accounts for management tasks.
+    - Legitimate administrative or user RDP activity (highly dependent on the environment).
 level: medium
 tags:
   - attack.lateral_movement
