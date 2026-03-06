@@ -8,14 +8,12 @@ logsource:
 detection:
   selection:
     EventID: 4624
-    LogonType: 3
-  filter_rdp:
-    ProcessName|endswith: '\svchost.exe'
-    ServiceName: 'TermService'
-  condition: selection and filter_rdp
+    LogonType: '3'
+    AuthenticationPackageName: 'NTLM'
+  condition: selection
 falsepositives:
   - Legitimate use of Restricted Admin mode by high-privileged administrators.
-level: high
+level: medium
 tags:
   - attack.lateral_movement
   - attack.t1550.002
