@@ -4,7 +4,6 @@ status: experimental
 description: Detects the staging of captured credentials in subdirectories of ProgramData using a specific version-style naming convention (vX.XX.XXXXX) often used by infostealers.
 references:
     - Internal IOC image analysis
-author: Gemini
 date: 2026/02/09
 tags:
     - attack.credential_access
@@ -27,7 +26,7 @@ detection:
             - 'C:\ProgramData\UbiSoft\v'
             - 'C:\ProgramData\Steam\v'
     selection_format:
-        TargetFilename|re: '.*\\v\d+\.\d{2,}\.\d{4,}$'
+        TargetFilename|re: '.*\\\\v[0-9]+\\.[0-9]{2,}\\.[0-9]{4,}.*'
     condition: selection_paths and selection_format
 falsepositives:
     - Extremely rare. Legitimate software typically uses more descriptive filenames or different sub-path structures in ProgramData.
