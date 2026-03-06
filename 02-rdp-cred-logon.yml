@@ -8,7 +8,7 @@ logsource:
 detection:
     selection:
         EventID: 4624
-        LogonType: 10
+        LogonType: '10'
     condition: selection
 falsepositives:
     - Legitimate administrative or user RDP activity (highly dependent on the environment).
